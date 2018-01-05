@@ -2,6 +2,7 @@ package com.example.alicja.firebaseshoppingapp;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
@@ -73,19 +74,20 @@ public class ProductEditorActivity extends BasicActivity {
 
     private void saveProduct() {
         String productName = nameEditText.getText().toString().trim();
-        float productPrice = Float.parseFloat(priceEditText.getText().toString().trim());
-        int productQuantity = Integer.parseInt(quantityEditText.getText().toString().trim());
+        String productPrice = priceEditText.getText().toString().trim();
+        String productQuantity = quantityEditText.getText().toString().trim();
         boolean isBought = isBoughtCheckBox.isChecked();
+
+        //return if one of fields is empty
+        if (TextUtils.isEmpty(productName) || TextUtils.isEmpty(productPrice) || TextUtils.isEmpty(productQuantity)) {
+            return;
+        }
 
         //product ID from firebase database
         String productId = databaseReference.push().getKey();
 
-        Product product = new Product(productId, productName, productPrice, productQuantity, isBought );
-
-//        if (TextUtils.isEmpty(productName) || TextUtils.isEmpty(productPrice) || TextUtils.isEmpty(productQuantity)) {
-//            return;
-//        }
-
+        //create and save Product object
+        Product product = new Product(productId, productName, Float.parseFloat(productPrice), Integer.parseInt(productQuantity), isBought );
         databaseReference.child(String.valueOf(productId)).setValue(product);
 
     }
