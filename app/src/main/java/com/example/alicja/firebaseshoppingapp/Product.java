@@ -1,9 +1,12 @@
 package com.example.alicja.firebaseshoppingapp;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 /**
  * Created by Alicja on 05.01.2018.
  */
 
+@IgnoreExtraProperties
 public class Product {
 
     private String id;
