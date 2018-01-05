@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">FirebaseShoppingApp</string>
+    <string name="empty_view_title_text">Your shopping list is empty...</string>
+    <string name="empty_view_subtitle_text">Add your first product to the list :)</string>
+
+
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_preferences">Preferences</string>
+
+    <string name="editor_insert_product_successful">Product saved</string>
+    <string name="editor_insert_product_failed">Error with saving product</string>
+    <string name="editor_update_product_successful">Product updated</string>
+    <string name="editor_update_product_failed">Error with updating product</string>
+    <string name="editor_delete_product_successful">Product deleted</string>
+    <string name="editor_delete_product_failed">Error with deleting product</string>
+
+    <string name="category_name">Name</string>
+    <string name="category_price">Price</string>
+    <string name="category_quantity">Quantity</string>
+    <string name="category_is_bought">Bought</string>
+    <string name="hint_product_name">Name</string>
+    <string name="hint_product_price">Price (PLN)</string>
+    <string name="hint_product_quantity">Quantity</string>
 </resources>
