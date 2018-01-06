@@ -98,6 +98,7 @@ public class MainActivity extends BasicActivity {
 
                 int productPosition = productIds.indexOf(productKey);
                 productList.remove(productPosition);
+                productIds.remove(productPosition);
                 productAdapter.notifyDataSetChanged();
 
             }
