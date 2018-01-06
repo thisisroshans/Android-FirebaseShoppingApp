@@ -110,8 +110,8 @@ public class ProductEditorActivity extends BasicActivity {
 
             //update fields of current product
             databaseReference.child(productId).child("name").setValue(productName);
-            databaseReference.child(productId).child("price").setValue(productPrice);
-            databaseReference.child(productId).child("quantity").setValue(productQuantity);
+            databaseReference.child(productId).child("price").setValue(Float.parseFloat(productPrice));
+            databaseReference.child(productId).child("quantity").setValue(Integer.parseInt(productQuantity));
             databaseReference.child(productId).child("isBought").setValue(isBought);
 
         } else {

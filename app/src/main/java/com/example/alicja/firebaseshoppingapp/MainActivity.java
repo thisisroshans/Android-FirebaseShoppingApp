@@ -32,17 +32,22 @@ public class MainActivity extends BasicActivity {
     private FirebaseDatabase firebaseDatabase;
     private ChildEventListener childEventListener;
 
+    //List with products and product Ids
+    List<Product> productList;
+    List<String> productIds;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Initialize Lists
+        productList = new ArrayList<>();
+        productIds = new ArrayList<>();
 
         // Initialize message ListView and its adapter
         productsListView = (ListView) findViewById(R.id.product_list);
-
-        List<Product> productList = new ArrayList<>();
         productAdapter = new ProductAdapter(this, R.layout.product_list_item, productList);
         productsListView.setAdapter(productAdapter);
 
@@ -59,8 +64,6 @@ public class MainActivity extends BasicActivity {
             startActivity(intent);
         });
 
-
-
         //setting up firebase database
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("products");
@@ -70,11 +73,21 @@ public class MainActivity extends BasicActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Product product = dataSnapshot.getValue(Product.class);
                 productAdapter.add(product);
+                productIds.add(dataSnapshot.getKey());
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                Product newProduct = dataSnapshot.getValue(Product.class);
+                String productKey = dataSnapshot.getKey();
+
+                int productPosition = productIds.indexOf(productKey);
+                if (productPosition > -1 ){
+                    productList.set(productPosition, newProduct);
+                    productAdapter.notifyDataSetChanged();
+                }
 
             }
 
@@ -83,10 +96,9 @@ public class MainActivity extends BasicActivity {
                 String productKey = dataSnapshot.getKey();
                 Log.i(TAG, "onChildRemoved: " + productKey);
 
-                Product productToBeDeleted = productAdapter.findProductById(productKey);
-                if(productToBeDeleted != null) {
-                    productAdapter.remove(productToBeDeleted);
-                }
+                int productPosition = productIds.indexOf(productKey);
+                productList.remove(productPosition);
+                productAdapter.notifyDataSetChanged();
 
             }
 
