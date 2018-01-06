@@ -76,6 +76,10 @@ public class ProductEditorActivity extends BasicActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        if (!isEditionMode) {
+            menu.findItem(R.id.action_delete).setVisible(false);
+        }
+
         return true;
     }
 
@@ -86,10 +90,10 @@ public class ProductEditorActivity extends BasicActivity {
                 saveProduct();
                 finish();
                 return true;
-//            case R.id.action_delete:
-//                deleteProduct();
-//                finish();
-//                return true;
+            case R.id.action_delete:
+                deleteProduct();
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -135,18 +139,11 @@ public class ProductEditorActivity extends BasicActivity {
     }
 
 
-//    private void deleteProduct() {
-//        if (currentProductUri == null) {
-//            return;
-//        }
-//
-//        int rowsDeleted = getContentResolver().delete(currentProductUri, null, null);
-//        if (rowsDeleted == 0) {
-//            Toast.makeText(this, getString(R.string.editor_delete_product_failed),
-//                    Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(this, getString(R.string.editor_delete_product_successful),
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
+    private void deleteProduct() {
+        if (productId == null) {
+            return;
+        }
+
+        databaseReference.child(productId).removeValue();
+    }
 }
