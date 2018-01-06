@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +51,14 @@ public class MainActivity extends BasicActivity {
                 findViewById(R.id.empty_view)
         );
 
+        // Add clickListener to single products
+        productsListView.setOnItemClickListener((adapterView, view, position, id) -> {
+            Intent intent = new Intent(MainActivity.this, ProductEditorActivity.class);
+            Product currentProduct = productList.get(position);
+            intent.putExtra("product", currentProduct);
+            startActivity(intent);
+        });
+
 
 
         //setting up firebase database
@@ -88,6 +97,10 @@ public class MainActivity extends BasicActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+                Log.w(TAG, ":onCancelled", databaseError.toException());
+                Toast.makeText(getApplicationContext(), "Failed to load products.",
+                        Toast.LENGTH_SHORT).show();
 
             }
         };

@@ -1,8 +1,10 @@
 package com.example.alicja.firebaseshoppingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
@@ -14,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ProductEditorActivity extends BasicActivity {
 
-    private static final int EXISTING_PRODUCT_LOADER = 0;
+    private static final String TAG = "ProductEditorActivity";
 
     private EditText nameEditText;
     private EditText priceEditText;
@@ -23,6 +25,10 @@ public class ProductEditorActivity extends BasicActivity {
 
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
+
+    private boolean isEditionMode;
+    private String productId;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +44,23 @@ public class ProductEditorActivity extends BasicActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("products");
 
+        //checking if editing exisitng item
+        Intent intent = getIntent();
+        if (intent.getExtras() != null && intent.getParcelableExtra("product") != null) {
+
+            isEditionMode = true;
+            Log.i(TAG, "onCreate: existing product");
+
+            Product product = intent.getParcelableExtra("product");
+            productId = product.getId();
+            Log.i(TAG, "onCreate: product id:" + productId);
+
+            //if it is an existing item - fill the editTexts
+            setFieldsValues(product.getName(), product.getPrice() + "", product.getQuantity() + "", product.getIsBought());
+
+        } else {
+            isEditionMode = false;
+        }
 
         //changing color
         changeFont();
@@ -83,14 +106,34 @@ public class ProductEditorActivity extends BasicActivity {
             return;
         }
 
-        //product ID from firebase database
-        String productId = databaseReference.push().getKey();
+        if (isEditionMode) {
 
-        //create and save Product object
-        Product product = new Product(productId, productName, Float.parseFloat(productPrice), Integer.parseInt(productQuantity), isBought );
-        databaseReference.child(String.valueOf(productId)).setValue(product);
+            //update fields of current product
+            databaseReference.child(productId).child("name").setValue(productName);
+            databaseReference.child(productId).child("price").setValue(productPrice);
+            databaseReference.child(productId).child("quantity").setValue(productQuantity);
+            databaseReference.child(productId).child("isBought").setValue(isBought);
+
+        } else {
+            //new product ID from firebase database
+            String productId = databaseReference.push().getKey();
+
+            //create and save new product
+            Product product = new Product(productId, productName, Float.parseFloat(productPrice), Integer.parseInt(productQuantity), isBought);
+            databaseReference.child(String.valueOf(productId)).setValue(product);
+        }
 
     }
+
+    private void setFieldsValues(String name, String price, String quantity, boolean isBought) {
+
+        nameEditText.setText(name);
+        priceEditText.setText(price);
+        quantityEditText.setText(quantity);
+        isBoughtCheckBox.setChecked(isBought);
+
+    }
+
 
 //    private void deleteProduct() {
 //        if (currentProductUri == null) {
