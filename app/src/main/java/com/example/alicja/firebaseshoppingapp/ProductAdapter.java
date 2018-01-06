@@ -46,6 +46,9 @@ public class ProductAdapter extends ArrayAdapter<Product> {
 
         if (product.getIsBought()) {
             productDetails =  "\u2713" + productDetails;
+            convertView.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        } else {
+            convertView.setBackgroundColor(Color.WHITE);
         }
 
         summaryTextview.setText(productDetails);
