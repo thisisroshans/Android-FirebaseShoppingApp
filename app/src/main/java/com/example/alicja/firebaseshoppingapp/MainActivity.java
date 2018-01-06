@@ -74,6 +74,11 @@ public class MainActivity extends BasicActivity {
                 String productKey = dataSnapshot.getKey();
                 Log.i(TAG, "onChildRemoved: " + productKey);
 
+                Product productToBeDeleted = productAdapter.findProductById(productKey);
+                if(productToBeDeleted != null) {
+                    productAdapter.remove(productToBeDeleted);
+                }
+
             }
 
             @Override
@@ -88,9 +93,6 @@ public class MainActivity extends BasicActivity {
         };
 
         databaseReference.addChildEventListener(childEventListener);
-
-
-
 
 
         // FAB for adding new products
