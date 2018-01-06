@@ -1,5 +1,8 @@
 package com.example.alicja.firebaseshoppingapp;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
@@ -7,7 +10,17 @@ import com.google.firebase.database.IgnoreExtraProperties;
  */
 
 @IgnoreExtraProperties
-public class Product {
+public class Product implements Parcelable{
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 
     private String id;
     private String name;
@@ -65,4 +78,31 @@ public class Product {
     public void setIsBought(boolean bought) {
         isBought = bought;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    //Parcelling
+    public Product(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        price = in.readFloat();
+        quantity = in.readInt();
+        isBought = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(name);
+        parcel.writeFloat(price);
+        parcel.writeInt(quantity);
+        parcel.writeByte((byte) (isBought ? 1 : 0));
+    }
+
+
+
+
 }
